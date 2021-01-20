@@ -1,0 +1,71 @@
+// Copyright 2020. The Tari Project
+//
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+// following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+// disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+// following disclaimer in the documentation and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote
+// products derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+// INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+syntax = "proto3";
+
+package tari.rpc;
+
+import "types.proto";
+
+// The gRPC interface for interacting with the wallet.
+service Wallet {
+  rpc GetVersion (Empty) returns (GetVersionResponse);
+  // This returns a coinbase transaction
+  rpc GetCoinbase (GetCoinbaseRequest) returns (GetCoinbaseResponse);
+  // Send Tari to a number of recipients
+  rpc Transfer (TransferRequest)  returns (TransferResponse);
+}
+
+message GetVersionResponse {
+  string version = 1;
+}
+
+message TransferRequest {
+  repeated PaymentRecipient recipients = 1;
+}
+
+message PaymentRecipient {
+  string address = 1;
+  uint64 amount = 2;
+  uint64 fee_per_gram = 3;
+  string message = 4;
+}
+
+message TransferResponse {
+  repeated TransferResult results = 1;
+}
+
+message TransferResult {
+  string address = 1;
+  uint64 transaction_id = 2;
+  bool is_success = 3;
+  string failure_message = 4;
+}
+
+message GetCoinbaseRequest {
+  uint64 reward = 1;
+  uint64 fee = 2;
+  uint64 height = 3;
+}
+
+message GetCoinbaseResponse {
+  Transaction transaction = 1;
+}
