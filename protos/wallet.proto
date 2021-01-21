@@ -24,29 +24,26 @@ syntax = "proto3";
 package tari.rpc;
 
 import "types.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
 
 // The gRPC interface for interacting with the wallet.
 service Wallet {
-  rpc GetVersion (Empty) returns (GetVersionResponse);
-  // This returns a coinbase transaction
-  rpc GetCoinbase (GetCoinbaseRequest) returns (GetCoinbaseResponse);
-  // Send Tari to a number of recipients
-  rpc Transfer (TransferRequest)  returns (TransferResponse);
-}
-
-message GetVersionResponse {
-  string version = 1;
+    // This returns a coinbase transaction
+    rpc GetCoinbase (GetCoinbaseRequest) returns (GetCoinbaseResponse);
+    // Send Tari to a number of recipients
+    rpc Transfer (TransferRequest)  returns (TransferResponse);
 }
 
 message TransferRequest {
-  repeated PaymentRecipient recipients = 1;
+    repeated PaymentRecipient recipients = 1;
 }
 
 message PaymentRecipient {
-  string address = 1;
-  uint64 amount = 2;
-  uint64 fee_per_gram = 3;
-  string message = 4;
+    string address = 1;
+    uint64 amount = 2;
+    uint64 fee_per_gram = 3;
+    string message = 4;
 }
 
 message TransferResponse {
@@ -54,18 +51,18 @@ message TransferResponse {
 }
 
 message TransferResult {
-  string address = 1;
-  uint64 transaction_id = 2;
-  bool is_success = 3;
-  string failure_message = 4;
+    string address = 1;
+    uint64 transaction_id = 2;
+    bool is_success = 3;
+    string failure_message = 4;
 }
 
 message GetCoinbaseRequest {
-  uint64 reward = 1;
-  uint64 fee = 2;
-  uint64 height = 3;
+    uint64 reward = 1;
+    uint64 fee = 2;
+    uint64 height = 3;
 }
 
 message GetCoinbaseResponse {
-  Transaction transaction = 1;
+    Transaction transaction = 1;
 }
