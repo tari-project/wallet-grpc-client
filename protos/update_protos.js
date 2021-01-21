@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 
 const branch = process.env.BRANCH || 'development';
 
-const protoSrcUrls = [
+const srcUrls = [
     `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/types.proto`,
     `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/wallet.proto`,
 ];
@@ -27,11 +27,11 @@ async function download(srcUrl, destPath) {
 }
 
 function Result(ok, err) {
-    this._ok = ok;
-    this._err = err;
+    const _ok = ok;
+    const _err = err;
 
-    this.ok = () => this._ok;
-    this.err = () => this._err;
+    this.ok = () => _ok;
+    this.err = () => _err;
     this.expect = (msg) => {
         if (this.err()) {
             throw new Error(`${msg ? `${msg}: ` : ''}${this.err()}`);
@@ -44,8 +44,8 @@ Result.Ok = (ok) => new Result(ok);
 Result.Err = (err) => new Result(undefined, err);
 Result.fromPromise = (promise) => promise.then(Result.Ok).catch(Result.Err);
 
-async function downloadAll() {
-    for (const srcUrl of protoSrcUrls) {
+async function syncAll() {
+    for (const srcUrl of srcUrls) {
         const fileName = path.basename(srcUrl);
         process.stdout.write(`Downloading ${fileName}... `);
         const dest = path.join(destination, fileName);
@@ -66,7 +66,7 @@ async function downloadAll() {
 
 (function () {
     try {
-        downloadAll()
+        syncAll()
             .then(() => {
                 console.log("Done.");
             })
