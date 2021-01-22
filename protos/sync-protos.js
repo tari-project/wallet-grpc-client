@@ -1,19 +1,21 @@
 const path = require('path');
-const fetch = require('node-fetch');
+const fetchRemote = require('node-fetch');
 const md5 = require('md5');
 const fs = require('fs').promises;
 
 const branch = process.env.BRANCH || 'development';
 
-const srcUrls = [
-    `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/types.proto`,
-    `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/wallet.proto`,
-];
-
 const destination = __dirname;
 
+async function fetch(url) {
+    if (url.startsWith("file://")) {
+        return await fs.readFile(url.substr(7));
+    }
+    return await fetchRemote(url).then(r => r.text());
+}
+
 async function download(srcUrl, destPath) {
-    const remoteContents = await fetch(srcUrl).then(resp => resp.text());
+    const remoteContents = await fetch(srcUrl);
     const remoteHash = md5(remoteContents)
     const localContents = (await Result.fromPromise(fs.readFile(destPath))).expect("Failed to read dest");
     const localHash = md5(localContents)
@@ -44,7 +46,7 @@ Result.Ok = (ok) => new Result(ok);
 Result.Err = (err) => new Result(undefined, err);
 Result.fromPromise = (promise) => promise.then(Result.Ok).catch(Result.Err);
 
-async function syncAll() {
+async function syncAll(srcUrls) {
     for (const srcUrl of srcUrls) {
         const fileName = path.basename(srcUrl);
         process.stdout.write(`Downloading ${fileName}... `);
@@ -64,9 +66,20 @@ async function syncAll() {
     }
 }
 
-(function () {
+function main(args) {
+    let srcUrls = [];
+    if (args.length == 0) {
+        srcUrls = [
+            `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/types.proto`,
+            `https://raw.githubusercontent.com/tari-project/tari/${branch}/applications/tari_app_grpc/proto/wallet.proto`,
+        ];
+    } else {
+        srcUrls = args;
+        console.log(`Using custom URLS, ${srcUrls.join(", ")}`);
+    }
+
     try {
-        syncAll()
+        syncAll(srcUrls)
             .then(() => {
                 console.log("Done.");
             })
@@ -74,5 +87,6 @@ async function syncAll() {
     } catch (err) {
         console.error(err);
     }
+}
 
-})();
+main(process.argv.slice(2));
