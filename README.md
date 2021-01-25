@@ -5,7 +5,7 @@ Async GRPC client library for the Tari Console Wallet.
 ## Usage
 
 ```javascript
-    const {Client} = requre('@tari/wallet-grpc-client');
+    const {Client} = require('@tari/wallet-grpc-client');
 
     const walletAddress = 'localhost:18143';
     const client = Client.connect(walletAddress);
