@@ -38,6 +38,12 @@ service Wallet {
     rpc Transfer (TransferRequest)  returns (TransferResponse);
     // Returns the transaction details for the given transaction IDs
     rpc GetTransactionInfo (GetTransactionInfoRequest) returns (GetTransactionInfoResponse);
+    // Request the wallet perform a coinsplit
+    rpc CoinSplit (CoinSplitRequest) returns (CoinSplitResponse);
+    // Returns all transactions' details
+    rpc GetAllCompletedTransactions (GetAllCompletedTransactionsRequest) returns (GetTransactionInfoResponse);
+    // Returns the balance
+    rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
 }
 
 message GetVersionRequest { }
@@ -96,6 +102,7 @@ message TransactionInfo {
     bytes excess_sig = 9;
     google.protobuf.Timestamp timestamp = 10;
     string message = 11;
+    bool valid = 12;
 }
 
 enum TransactionDirection {
@@ -121,6 +128,16 @@ enum TransactionStatus {
     TRANSACTION_STATUS_MINED_CONFIRMED = 6;
 }
 
+message GetAllCompletedTransactionsRequest { }
+
+message GetBalanceRequest { }
+
+message GetBalanceResponse {
+    uint64 available_balance = 1;
+    uint64 pending_incoming_balance = 2;
+    uint64 pending_outgoing_balance = 3;
+}
+
 message GetCoinbaseRequest {
     uint64 reward = 1;
     uint64 fee = 2;
@@ -129,4 +146,16 @@ message GetCoinbaseRequest {
 
 message GetCoinbaseResponse {
     Transaction transaction = 1;
+}
+
+message CoinSplitRequest {
+    uint64 amount_per_split = 1;
+    uint64 split_count = 2;
+    uint64 fee_per_gram = 3;
+    string message = 4;
+    uint64 lock_height = 5;
+}
+
+message CoinSplitResponse {
+    uint64 tx_id = 1;
 }
