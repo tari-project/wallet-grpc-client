@@ -1,6 +1,6 @@
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
-const {promisifyAll} = require("grpc-promise");
+const { promisifyAll } = require("grpc-promise");
 
 const packageDefinition = protoLoader.loadSync(
     `${__dirname}/../protos/wallet.proto`,
@@ -16,14 +16,14 @@ const tariGrpc = protoDescriptor.tari.rpc;
 
 function connect(address) {
     const client = new tariGrpc.Wallet(address, grpc.credentials.createInsecure());
-    promisifyAll(client, {metadata: new grpc.Metadata()});
+    promisifyAll(client, { metadata: new grpc.Metadata() });
     return client;
 }
 
 function Client(address) {
     this.inner = connect(address);
 
-    ['getVersion', 'identify', 'getCoinbase', 'transfer', 'getTransactionInfo'].forEach((method) => {
+    ['getVersion', 'identify', 'getCoinbase', 'transfer', 'getTransactionInfo', 'coinSplit', 'getAllCompletedTransactions', 'getBalance'].forEach((method) => {
         this[method] = (arg) => this.inner[method]().sendMessage(arg);
     })
 }
