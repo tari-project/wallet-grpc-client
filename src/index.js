@@ -23,7 +23,7 @@ function connect(address) {
 function Client(address) {
     this.inner = connect(address);
 
-    ['getVersion', 'identify', 'getCoinbase', 'transfer', 'getTransactionInfo', 'coinSplit', 'getAllCompletedTransactions', 'getBalance'].forEach((method) => {
+    ['getVersion', 'identify', 'getCoinbase', 'transfer', 'getTransactionInfo', 'coinSplit', 'getCompletedTransactions', 'getBalance'].forEach((method) => {
         this[method] = (arg) => this.inner[method]().sendMessage(arg);
     })
 }
