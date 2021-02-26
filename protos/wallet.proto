@@ -41,7 +41,7 @@ service Wallet {
     // Request the wallet perform a coinsplit
     rpc CoinSplit (CoinSplitRequest) returns (CoinSplitResponse);
     // Returns all transactions' details
-    rpc GetAllCompletedTransactions (GetAllCompletedTransactionsRequest) returns (GetTransactionInfoResponse);
+    rpc GetCompletedTransactions (GetCompletedTransactionsRequest) returns (stream GetCompletedTransactionsResponse);
     // Returns the balance
     rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
 }
@@ -128,7 +128,11 @@ enum TransactionStatus {
     TRANSACTION_STATUS_MINED_CONFIRMED = 6;
 }
 
-message GetAllCompletedTransactionsRequest { }
+message GetCompletedTransactionsRequest { }
+
+message GetCompletedTransactionsResponse {
+    TransactionInfo transaction = 1;
+}
 
 message GetBalanceRequest { }
 
