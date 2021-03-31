@@ -38,12 +38,12 @@ service Wallet {
     rpc Transfer (TransferRequest)  returns (TransferResponse);
     // Returns the transaction details for the given transaction IDs
     rpc GetTransactionInfo (GetTransactionInfoRequest) returns (GetTransactionInfoResponse);
-    // Request the wallet perform a coinsplit
-    rpc CoinSplit (CoinSplitRequest) returns (CoinSplitResponse);
     // Returns all transactions' details
     rpc GetCompletedTransactions (GetCompletedTransactionsRequest) returns (stream GetCompletedTransactionsResponse);
     // Returns the balance
     rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
+    // Request the wallet perform a coinsplit
+    rpc CoinSplit (CoinSplitRequest) returns (CoinSplitResponse);
 }
 
 message GetVersionRequest { }
@@ -103,6 +103,7 @@ message TransactionInfo {
     google.protobuf.Timestamp timestamp = 10;
     string message = 11;
     bool valid = 12;
+    bool is_found = 13;
 }
 
 enum TransactionDirection {
