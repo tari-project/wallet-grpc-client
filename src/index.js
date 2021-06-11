@@ -31,6 +31,7 @@ function Client(address) {
         'getVersion',
         'identify',
         'transfer',
+        'importUtxos'
     ];
 
     functions
