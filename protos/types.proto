@@ -182,9 +182,11 @@ message TransactionOutput {
     // The hash of the output, as it appears in the MMR
     bytes hash = 4;
     // Tari script serialised script
-    bytes script= 5;
+    bytes script = 5;
     // Tari script offset pubkey, K_O
     bytes script_offset_public_key = 6;
+    // UTXO signature with the script offset private key, k_O
+    Signature sender_metadata_signature = 7;
 }
 
 // Options for UTXO's
