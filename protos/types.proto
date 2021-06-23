@@ -304,8 +304,6 @@ message UnblindedOutput {
     bytes script = 4;
     // Tari script input data for spending
     bytes input_data = 5;
-    // The block height that the UTXO was mined
-    uint64 height = 6;
     // Tari script private key
     bytes script_private_key = 7;
     // Tari script offset pubkey, K_O
